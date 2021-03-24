@@ -175,13 +175,16 @@ class Area {
     }
     public static void main(String[] args) {
 
-        CandyBox[]cutie= new CandyBox[3];
+        CandyBox[]cutie= new CandyBox[5];
         cutie[0] = new Milka("capsuni", "origin", 3, 5);
+        cutie[4] = new Milka("capsuni", "origin", 3, 5);
         cutie[1] = new Merci("cacao", "origin", 4);
-        cutie[2] = new Lindt("milk", "origin", 4, 6, 9);
+        cutie[2] = new Lindt("milk", "origin", 3, 6, 9);
+        cutie[3] = new Lindt("milk", "origin", 4, 6, 9);
         CandyBag bag = new CandyBag(cutie);
         Area area = new Area(bag, 20, "Str Eroilor");
-        area.printAdress();
+       // area.printAdress();
+        System.out.println(cutie[0].equals(cutie[4]));
     }
 
 }
