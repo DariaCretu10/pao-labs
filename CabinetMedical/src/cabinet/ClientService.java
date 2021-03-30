@@ -14,7 +14,7 @@ public class ClientService {
     {
         for ( Client client : clienti)
         {
-            if ( client.nume == nume && client.prenume == prenume )
+            if ( client.getNume().equals(nume) && client.getPrenume().equals(prenume) )
                 System.out.println(client.toString());
                 break;
         }

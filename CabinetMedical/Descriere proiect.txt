@@ -1,0 +1,30 @@
+Am ales proiectul 3) cabinet medical 
+
+Clasele implementate sunt :
+* Medic
+* Stomatolog - extinde Medic
+* Dermatolog - extinde Medic
+* Client
+* Programare
+* BonFiscal
+* Program - aici am gasim ce tip poate lua campul program din clasa Stomatolog ( adica daca stomatologul
+lucreaza dimineata sau dupa-amiaza
+* NameComparator - cu ajutorul caruia sortam medicii dupa numele de familie
+* MedicService
+* ClientService
+* BonFiscalService
+In aceste ultime 3 clase avem metodele pentru Medic, Client si BonFiscal in care se regasesc urmatoarele metode:
+
+
+-> public static void afisareMedici(Medic[] medici) - afisarea medicilor
+-> public static Medic[] stergeMedic(Medic[] medici, Medic medicSters) - sterge medicul dat ca parametru
+-> public static Medic editareVechime(Medic medic, int vechime) -> editeaza vechimea medicului dat ca parametru
+-> public static void afisareBonData(BonFiscal[] bonuri, String data) -> afiseaza bonurile scoase in data data ca parametru
+-> public static BonFiscal[] adaugareBon(BonFiscal[] bonuri, BonFiscal bonNou) -> adauga un nou bon la lista de bonuri
+-> public static void afisareBon(BonFiscal[] bonuri) -> afiseaza bonurile 
+-> public static BonFiscal[] stergeBon(BonFiscal[] bonuri, BonFiscal bonSters) -> sterge bonul dat ca parametru
+-> public static void afisareClienti (Client[] clienti) -> afiseaza clientii
+-> public static void intoarcePacient (Client[] clienti, String nume, String prenume) -> intoarce pacientul cu numele si prenumele
+date ca parametru.
+
+

@@ -1,6 +1,6 @@
 package cabinet;
 
 public enum Program {
-    Dimineata,
-    Dupa_amiaza;
+    DIMINEATA,
+    DUPA_AMIAZA;
 }

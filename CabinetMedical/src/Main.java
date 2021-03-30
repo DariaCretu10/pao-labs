@@ -1,10 +1,11 @@
 import cabinet.*;
+import java.util.Arrays;
 public class Main {
 
     public static void main (String[] args)
     {
         Stomatolog stomatolog1 = new Stomatolog("stomatologie", "Popescu", "Andreea",
-                45,18, Program.Dimineata, Boolean.FALSE);
+                45,18, Program.DIMINEATA, Boolean.FALSE);
         Dermatolog dermatolog1 = new Dermatolog("dermatologie", "Andrei", "Mihai", 32, 2, Boolean.FALSE);
 
         Dermatolog dermatolog2 = new Dermatolog("dermatologie", "Bontea", "Ioana", 27, 2, Boolean.TRUE);
@@ -24,14 +25,18 @@ public class Main {
         Client client3 = new Client("Simion", "Cezar", 15, "consultatie");
         Client client4 = new Client("Simion", "Cezar", 15, "consultatie");
 
-        /*Medic[] medici = new Medic[]{stomatolog1, dermatolog1, dermatolog2};
+        //Sortam medicii dupa nume folosind comparator
+        Medic[] medici = new Medic[]{stomatolog1, dermatolog1, dermatolog2};
+        NameComparator nameCompare = new NameComparator();
+        Arrays.sort(medici, nameCompare);
         MedicService.afisareMedici(medici);
         System.out.println("-------------------");
-        Medic[] listaMedici = MedicService.stergeMedic(medici, dermatolog1);
+        /*Medic[] listaMedici = MedicService.stergeMedic(medici, dermatolog1);
         for (Medic medic : listaMedici )
         {
             System.out.println(medic.toString());
         }
+
         System.out.println("-------------------");
         BonFiscal[] bonuri = new BonFiscal[]{bon1, bon2, bon3};
         BonFiscalService.afisareBonData(bonuri,"12-02-2020");
@@ -40,7 +45,8 @@ public class Main {
         for ( BonFiscal bon : bonuriNoi )
         {
             System.out.println(bon.toString());
-        }*/
+        }
+
 
         System.out.println("-------------------");
         Client[] clienti = new Client[]{client1, client2, client3};
@@ -48,6 +54,7 @@ public class Main {
         System.out.println("-------------------");
         ClientService.intoarcePacient(clienti, "Cretu", "Daria");
         System.out.println("-------------------");
-        System.out.println(client3.equals(client4));
+        System.out.println(client3.equals(client4));*/
+        System.out.println(MedicService.editareVechime(stomatolog1, 17));
     }
 }

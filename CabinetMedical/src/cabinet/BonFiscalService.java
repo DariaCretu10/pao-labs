@@ -5,7 +5,7 @@ public class BonFiscalService {
     {
         for (BonFiscal bon : bonuri)
         {
-            if ( bon.data == data)
+            if ( bon.getData().equals(data))
             System.out.println(bon.toString());
         }
     }

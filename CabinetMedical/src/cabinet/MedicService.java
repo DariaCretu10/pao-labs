@@ -28,4 +28,11 @@ public class MedicService
         }
         return mediciNou;
     }
+
+    public static Medic editareVechime(Medic medic, int vechime)
+    {
+        medic.setVechime(vechime);
+        return medic;
+    }
+
 }

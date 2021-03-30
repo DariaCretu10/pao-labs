@@ -51,12 +51,12 @@ class Lindt extends CandyBox {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lindt lindt = (Lindt) o;
-        return length.equals(lindt.length) && width.equals(lindt.width) && height.equals(lindt.height);
+        return flavor.equals(lindt.flavor) && origin.equals(lindt.origin);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(length, width, height);
+        return Objects.hash(flavor, origin);
     }
 }
 
@@ -184,7 +184,7 @@ class Area {
         CandyBag bag = new CandyBag(cutie);
         Area area = new Area(bag, 20, "Str Eroilor");
        // area.printAdress();
-        System.out.println(cutie[0].equals(cutie[4]));
+        System.out.println(cutie[2].equals(cutie[3]));
     }
 
 }
