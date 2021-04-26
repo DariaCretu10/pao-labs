@@ -2,19 +2,33 @@ package cabinet;
 import java.util.Objects;
 public class Medic implements Comparable<Medic> {
 
+    private int idMedic;
     private String specialitate;
     private String nume;
     private String prenume;
     private int varsta;
     private int vechime;
+    private static int id=0;
 
     public Medic()
     {
 
     }
 
+    public Medic(int idMed, String specialitate, String nume, String prenume, int varsta, int vechime)
+    {
+        this.idMedic = idMed;
+        this.specialitate = specialitate;
+        this.nume = nume;
+        this.prenume = prenume;
+        this.varsta = varsta;
+        this.vechime = vechime;
+        id++;
+    }
+
     public Medic(String specialitate, String nume, String prenume, int varsta, int vechime)
     {
+        this.idMedic = ++id;
         this.specialitate = specialitate;
         this.nume = nume;
         this.prenume = prenume;
@@ -22,6 +36,13 @@ public class Medic implements Comparable<Medic> {
         this.vechime = vechime;
     }
 
+    public int getIdMedic() {
+        return idMedic;
+    }
+
+    public void setIdMedic(int idMedic) {
+        this.idMedic = idMedic;
+    }
 
     public String getSpecialitate()
     {
@@ -76,7 +97,7 @@ public class Medic implements Comparable<Medic> {
     @Override
     public String toString() {
         return "Medicul " + nume + " " + prenume + " cu varsta de " +
-                varsta + " ani are o vechime de " + vechime + " ani";
+                varsta + " ani are o vechime de " + vechime + " ani si lucreaza in domeniul " + specialitate;
     }
 
     @Override

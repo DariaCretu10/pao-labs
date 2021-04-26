@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class Client {
 
+    private int idClient;
+    private static int id=0;
     protected String nume;
     protected String prenume;
     private int varsta;
@@ -14,12 +16,31 @@ public class Client {
 
     }
 
-    public Client(String nume, String prenume, int varsta, String interventie)
+    public Client(int idCl, String nume, String prenume, int varsta, String interventie)
     {
+        this.idClient = idCl;
         this.nume = nume;
         this.prenume = prenume;
         this.varsta = varsta;
         this.interventie = interventie;
+        id++;
+    }
+
+    public Client(String nume, String prenume, int varsta, String interventie)
+    {
+        this.idClient = ++id;
+        this.nume = nume;
+        this.prenume = prenume;
+        this.varsta = varsta;
+        this.interventie = interventie;
+    }
+
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
     }
 
     public String getNume()

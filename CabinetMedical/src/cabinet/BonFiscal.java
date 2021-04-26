@@ -1,46 +1,60 @@
 package cabinet;
 import java.util.Objects;
+import java.time.LocalDate;
 
 public class BonFiscal  {
-    private String numeClient;
-    private String numeMedic;
+
+
+    private int idClient;
+    private int idMedic;
     private String serviciu;
-    private int id;
+    private int idBon;
     private int pret;
-    protected String data;
+    protected LocalDate data;
+    private static int id = 0;
 
     public BonFiscal()
     {
 
     }
 
-    public BonFiscal(String numeClient, String numeMedic, String serviciu, int id, int pret, String data)
+    public BonFiscal(int idCl, int idMed, String serviciu, int BonId, int pret, LocalDate data)
     {
-        this.numeClient = numeClient;
-        this.numeMedic = numeMedic;
+        this.idClient = idCl;
+        this.idMedic = idMed;
         this.serviciu = serviciu;
-        this.id = id;
+        this.idBon = BonId;
+        this.pret = pret;
+        this.data = data;
+        id++;
+
+    }
+
+    public BonFiscal(int idCl, int idMed, String serviciu, int pret, LocalDate data)
+    {
+        this.idClient = idCl;
+        this.idMedic = idMed;
+        this.serviciu = serviciu;
+        this.idBon = ++id;
         this.pret = pret;
         this.data = data;
 
     }
 
-    public String getnumeClient()
-    {
-        return numeClient;
-    }
-    public void setnumeClient(String numeClient)
-    {
-        this.numeClient  = numeClient;
+    public int getIdClient() {
+        return idClient;
     }
 
-    public String getnumeMedic()
-    {
-        return numeMedic;
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
     }
-    public void setnumeMedic(String numeMedic)
-    {
-        this.numeMedic = numeMedic;
+
+    public int getIdMedic() {
+        return idMedic;
+    }
+
+    public void setIdMedic(int idMedic) {
+        this.idMedic = idMedic;
     }
 
     public String getServiciu()
@@ -52,13 +66,12 @@ public class BonFiscal  {
         this.serviciu = serviciu;
     }
 
-    public int getId()
-    {
-        return id;
+    public int getIdBon() {
+        return idBon;
     }
-    public void setId(int id)
-    {
-        this.id  = id;
+
+    public void setIdBon(int idBon) {
+        this.idBon = idBon;
     }
 
     public int getPret()
@@ -69,13 +82,13 @@ public class BonFiscal  {
         this.pret = pret;
     }
 
-    public String getData() { return data;}
-    public void setData(String data) { this.data = data;}
+    public LocalDate getData() { return data;}
+    public void setData(LocalDate data) { this.data = data;}
 
     @Override
     public String toString(){
-        return "Acest bon cu id-ul " + id +  " apartine clientului " + numeClient +
-                " care a avut o programare pentru " + serviciu + " la medicul " + numeMedic +
+        return "Acest bon cu id-ul " + id +  " apartine clientului " + idClient +
+                " care a avut o programare pentru " + serviciu + " la medicul " + idMedic +
                 " al carei cost a fost " + pret;
     }
 
@@ -84,7 +97,7 @@ public class BonFiscal  {
         if (this == o) return true;
         if (!(o instanceof BonFiscal)) return false;
         BonFiscal bon = (BonFiscal) o;
-        return Objects.equals(getData(), bon.getData()) && Objects.equals(getId(), bon.getId());
+        return Objects.equals(getData(), bon.getData()) && Objects.equals(getIdBon(), bon.getIdBon());
     }
 
 }

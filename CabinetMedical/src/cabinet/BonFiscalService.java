@@ -1,47 +1,130 @@
 package cabinet;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
 public class BonFiscalService {
-    public static void afisareBonData(BonFiscal[] bonuri, String data)
-    {
-        for (BonFiscal bon : bonuri)
-        {
-            if ( bon.getData().equals(data))
-            System.out.println(bon.toString());
+
+
+
+    public static void scrieInAudit(String actiune) {
+        try {
+            FileWriter writer1 = new FileWriter("src/cabinet/servAudit.csv");
+            LocalDateTime timp = LocalDateTime.now();
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            String timpFormatat = timp.format(format);
+            String actiuneFinal = actiune + "," + timpFormatat;
+            writer1.write(actiuneFinal);
+            writer1.write('\n');
+            writer1.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public static BonFiscal[] adaugareBon(BonFiscal[] bonuri, BonFiscal bonNou)
-    {
-        BonFiscal[] bonuriNoi = new BonFiscal[bonuri.length+1];
-        for(int i = 0; i<bonuri.length; i++)
-            bonuriNoi[i] = bonuri[i];
-        bonuriNoi[bonuri.length] = bonNou;
-        return bonuriNoi;
-    }
-
-    public static void afisareBon(BonFiscal[] bonuri)
-    {
-        for (BonFiscal bon : bonuri)
-        {
-            System.out.println(bon.toString());
-        }
-    }
-
-    public static BonFiscal[] stergeBon(BonFiscal[] bonuri, BonFiscal bonSters)
-    {
-        BonFiscal[] bonuriNou = new BonFiscal[bonuri.length-1];
-        for ( int i=0; i<bonuriNou.length; i++)
-        {
-            if ( bonuri[i].equals(bonSters))
-            {
-                for (int j=i; j<bonuriNou.length; j++)
-                {
-                    bonuri[j] = bonuri[j+1];
-                }
+    public void readBonuri(ArrayList<BonFiscal> bonuri) throws IOException {
+        BufferedReader csvReader = new BufferedReader(new FileReader("src/cabinet/Bon.csv"));
+        String row;
+        while ((row = csvReader.readLine()) != null) {
+            String[] data = row.split(",");
+            if (data.length == 6) {
+                BonFiscal bon = new BonFiscal(Integer.valueOf(data[0]), Integer.valueOf(data[1]), data[2], Integer.valueOf(data[3]), Integer.valueOf(data[4]), LocalDate.parse(data[5]));
+                bonuri.add(bon);
+            } else {
+                BonFiscal bon = new BonFiscal(Integer.valueOf(data[0]), Integer.valueOf(data[1]), data[2], Integer.valueOf(data[3]), LocalDate.parse(data[4]));
+                bonuri.add(bon);
             }
 
-            bonuriNou[i] = bonuri[i];
+            // do something with the data
         }
-        return bonuriNou;
+        csvReader.close();
     }
+
+    public static void writeBonuri(ArrayList<BonFiscal> bonuri) {
+        try {
+            FileWriter csvWriter = new FileWriter("src/cabinet/Bon.csv");
+            for (BonFiscal bon : bonuri) {
+                String elem = bon.getIdClient() + "," + bon.getIdMedic() + "," + bon.getServiciu() + "," +
+                        bon.getIdBon() + "," + bon.getPret() + "," + bon.getData();
+                csvWriter.write(elem);
+                csvWriter.write('\n');
+
+            }
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        scrieInAudit("CitireDinFisierBonuri");
+
+    }
+
+
+    public static void afisareBonData(BonFiscal[] bonuri, String data) {
+        for (BonFiscal bon : bonuri) {
+            if (bon.getData().equals(data))
+                System.out.println(bon.toString());
+        }
+    }
+
+    public static ArrayList<BonFiscal> adaugareBon(ArrayList<BonFiscal> bonuri, BonFiscal bonNou)
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduceti id-ul clientului");
+        int idCl = scanner.nextInt();
+        System.out.println("Introduceti id-ul medicului");
+        int idMed = scanner.nextInt();
+        System.out.println("Introduceti serviciul furnizat");
+        String serviciu = scanner.nextLine();
+        System.out.println("Introduceti pretul serviciului : ");
+        int pret = scanner.nextInt();
+        System.out.println("Introduceti data bonului : ");
+        String date = scanner.nextLine();
+        LocalDate data = LocalDate.parse(date);
+        bonNou = new BonFiscal(idCl,idMed,serviciu, pret, data);
+        bonuri.add(bonNou);
+        writeBonuri(bonuri);
+        scrieInAudit("adaugareBon");
+        return bonuri;
+    }
+
+    public void afisareBon(ArrayList<BonFiscal> bonuri) {
+        for (BonFiscal bon : bonuri) {
+            System.out.println(bon.toString());
+        }
+        scrieInAudit("AfisareBonuri");
+    }
+
+    public static ArrayList<BonFiscal> stergeBon(ArrayList<BonFiscal> bonuri) {
+        Scanner scanner1 = new Scanner(System.in);
+        BonFiscal bonSters = new BonFiscal();
+        bonSters = null;
+        while ( bonSters == null)
+        {
+            System.out.println("Introduceti id-ul bonului de sters : ");
+            int id = scanner1.nextInt();
+            bonSters = obtineBonById(bonuri, id);
+            if (bonSters == null)
+                System.out.println("Introduceti un id valid!");
+        }
+        bonuri.remove(bonSters);
+        writeBonuri(bonuri);
+        scrieInAudit("StergereBon");
+        return bonuri;
+    }
+
+    public static BonFiscal obtineBonById(ArrayList<BonFiscal> bonuri, int idBon)
+    {
+        for (BonFiscal bon :bonuri)
+        {
+            if ( bon.getIdBon() == idBon )
+                return bon;
+        }
+        return null;
+    }
+
 }
