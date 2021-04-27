@@ -1,6 +1,4 @@
 import cabinet.*;
-//mentionez ca meniul nu este complet deocamdata, functioneaza doar pentru medici dar restul functiilor sunt implementate
-//doar nu pot fi apelate prin intermediul meniului
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.FileWriter;
