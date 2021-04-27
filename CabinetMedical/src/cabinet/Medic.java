@@ -17,13 +17,14 @@ public class Medic implements Comparable<Medic> {
 
     public Medic(int idMed, String specialitate, String nume, String prenume, int varsta, int vechime)
     {
+        ++id;
         this.idMedic = idMed;
         this.specialitate = specialitate;
         this.nume = nume;
         this.prenume = prenume;
         this.varsta = varsta;
         this.vechime = vechime;
-        id++;
+
     }
 
     public Medic(String specialitate, String nume, String prenume, int varsta, int vechime)

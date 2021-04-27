@@ -13,7 +13,7 @@ public class BonFiscalService {
 
     public static void scrieInAudit(String actiune) {
         try {
-            FileWriter writer1 = new FileWriter("src/cabinet/servAudit.csv");
+            FileWriter writer1 = new FileWriter("src/cabinet/servAudit.csv", true);
             LocalDateTime timp = LocalDateTime.now();
             DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             String timpFormatat = timp.format(format);
@@ -40,7 +40,7 @@ public class BonFiscalService {
                 bonuri.add(bon);
             }
 
-            // do something with the data
+
         }
         csvReader.close();
     }
@@ -64,57 +64,71 @@ public class BonFiscalService {
     }
 
 
-    public static void afisareBonData(BonFiscal[] bonuri, String data) {
+    public static void afisareBonData(ArrayList<BonFiscal> bonuri) {
+        System.out.println("Introduceti data dorita : ");
+        Scanner scanner1 = new Scanner(System.in);
+        String date = scanner1.nextLine();
+        LocalDate data = LocalDate.parse(date);
         for (BonFiscal bon : bonuri) {
             if (bon.getData().equals(data))
                 System.out.println(bon.toString());
         }
     }
 
-    public static ArrayList<BonFiscal> adaugareBon(ArrayList<BonFiscal> bonuri, BonFiscal bonNou)
+    public static ArrayList<BonFiscal> adaugareBon(ArrayList<BonFiscal> bonuri)
     {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduceti id-ul clientului");
+        System.out.println("Introduceti id-ul clientului :");
         int idCl = scanner.nextInt();
-        System.out.println("Introduceti id-ul medicului");
+        System.out.println("Introduceti id-ul medicului :");
         int idMed = scanner.nextInt();
-        System.out.println("Introduceti serviciul furnizat");
-        String serviciu = scanner.nextLine();
+        System.out.println("Introduceti serviciul furnizat :");
+        String serviciu = scanner.next();
         System.out.println("Introduceti pretul serviciului : ");
         int pret = scanner.nextInt();
         System.out.println("Introduceti data bonului : ");
-        String date = scanner.nextLine();
+        String date = scanner.next();
         LocalDate data = LocalDate.parse(date);
-        bonNou = new BonFiscal(idCl,idMed,serviciu, pret, data);
+        int idBonMaxi = 0;
+        for (BonFiscal bon : bonuri )
+        {
+            if ( bon.getIdBon() > idBonMaxi )
+                idBonMaxi = bon.getIdBon();
+        }
+        BonFiscal bonNou = new BonFiscal(idCl,idMed,serviciu,idBonMaxi+1, pret, data);
         bonuri.add(bonNou);
         writeBonuri(bonuri);
         scrieInAudit("adaugareBon");
         return bonuri;
     }
 
-    public void afisareBon(ArrayList<BonFiscal> bonuri) {
+    public static void afisareBon(ArrayList<BonFiscal> bonuri) {
+        System.out.println("Lista bonurilor curente este : ");
         for (BonFiscal bon : bonuri) {
             System.out.println(bon.toString());
         }
         scrieInAudit("AfisareBonuri");
     }
 
-    public static ArrayList<BonFiscal> stergeBon(ArrayList<BonFiscal> bonuri) {
+    public static void stergeBon(ArrayList<BonFiscal> bonuri) throws MyException {
         Scanner scanner1 = new Scanner(System.in);
         BonFiscal bonSters = new BonFiscal();
-        bonSters = null;
-        while ( bonSters == null)
+        System.out.println("Introduceti id-ul bonului de sters : ");
+        int id = scanner1.nextInt();
+        bonSters = obtineBonById(bonuri, id);
+        if ( bonSters != null)
         {
-            System.out.println("Introduceti id-ul bonului de sters : ");
-            int id = scanner1.nextInt();
-            bonSters = obtineBonById(bonuri, id);
-            if (bonSters == null)
-                System.out.println("Introduceti un id valid!");
+            bonuri.remove(bonSters);
+            writeBonuri(bonuri);
+            scrieInAudit("EliminaBonFiscal");
+            System.out.println("Lista actualizata a bonurilor :");
+            for ( BonFiscal bon : bonuri )
+                System.out.println(bon.toString());
         }
-        bonuri.remove(bonSters);
-        writeBonuri(bonuri);
-        scrieInAudit("StergereBon");
-        return bonuri;
+        else
+        {
+            throw new MyException ("Introduceti id valid!");
+        }
     }
 
     public static BonFiscal obtineBonById(ArrayList<BonFiscal> bonuri, int idBon)

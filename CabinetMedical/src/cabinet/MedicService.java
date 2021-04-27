@@ -65,10 +65,14 @@ public class MedicService
         int varsta = scanner.nextInt();
         System.out.println("Introduceti vechimea medicului : ");
         int vechime = scanner.nextInt();
-        Medic medicNou = new Medic(specialitate, nume, prenume, varsta, vechime);
+        int idNou = idMax(medici);
+        Medic medicNou = new Medic( idNou+1,specialitate, nume, prenume, varsta, vechime);
         medici.add(medicNou);
         writeMedici(medici);
         scrieInAudit("adaugareMedic");
+        System.out.println("Lista acutalizata a medicilor :");
+        for ( Medic medic : medici )
+            System.out.println(medic.toString());
     }
 
     public static void afisareMedici(ArrayList<Medic> medici)
@@ -83,23 +87,25 @@ public class MedicService
 
 
 
-    public static ArrayList<Medic> stergeMedic(ArrayList<Medic> medici)
-    {
+    public static void stergeMedic(ArrayList<Medic> medici) throws MyException {
         Scanner scanner1 = new Scanner(System.in);
         Medic medicSters = new Medic();
-        medicSters = null;
-        while ( medicSters == null)
+        System.out.println("Introduceti id-ul medicului de sters : ");
+        int id = scanner1.nextInt();
+        medicSters = obtineMedicById(medici, id);
+        if ( medicSters != null)
         {
-            System.out.println("Introduceti id-ul medicului de sters : ");
-            int id = scanner1.nextInt();
-            medicSters = obtineMedicById(medici, id);
-            if (medicSters == null)
-                System.out.println("Introduceti un id valid!");
+            medici.remove(medicSters);
+            writeMedici(medici);
+            scrieInAudit("EliminaMedic");
+            System.out.println("Lista actualizata a medicilor : ");
+            for ( Medic medic : medici )
+                System.out.println(medic.toString());
         }
-        medici.remove(medicSters);
-        writeMedici(medici);
-        scrieInAudit("stergereMedic");
-        return medici;
+        else
+        {
+            throw new MyException ("Introduceti id valid!");
+        }
 
     }
 
@@ -114,10 +120,20 @@ public class MedicService
         return medic;
     }
 
-    public static Medic editareVechime(Medic medic, int vechime)
-    {
-        medic.setVechime(vechime);
-        scrieInAudit("editareMedic");
+    public static Medic editareVechime(Medic medic) throws MyException {
+        System.out.println("Introduceti vechimea pe care vreti sa o setati : ");
+        Scanner scanner3 = new Scanner(System.in);
+        int vechime = scanner3.nextInt();
+        if (medic.getVarsta() - vechime >=24 )
+        {
+            medic.setVechime(vechime);
+            scrieInAudit("editareMedic");
+        }
+        else
+        {
+            throw new MyException ("Intre varsta medicului si vechime trebuie sa exista macar 24 de ani!");
+        }
+
         return medic;
     }
 
@@ -131,6 +147,18 @@ public class MedicService
         return null;
     }
 
+    public static int idMax(ArrayList<Medic> medici)
+    {
+        int maxi = 0;
+        for (Medic medic : medici )
+        {
+            if  ( medic.getIdMedic() > maxi )
+            {
+                maxi = medic.getIdMedic();
+            }
+        }
+        return maxi;
+    }
 
 
 }

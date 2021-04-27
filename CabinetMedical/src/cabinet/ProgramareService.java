@@ -34,7 +34,7 @@ public class ProgramareService {
 
     public static void writeProgramari(ArrayList<Programare>programs)  {
         try {
-            FileWriter csvWriter = new FileWriter("src/cabinet/Medic.csv");
+            FileWriter csvWriter = new FileWriter("src/cabinet/Programare.csv");
             for (Programare programare : programs) {
                 String elem = programare.getIdProgram() + "," + programare.getData() + "," + programare.getOra() + "," +
                               programare.getClient() + "," + programare.getMedic() + "," + programare.getPret();
@@ -61,25 +61,57 @@ public class ProgramareService {
         scrieInAudit("AfisareProgramari");
     }
 
-    public static ArrayList<Programare> stergeProgramare(ArrayList<Programare> programs)
-    {
+    public static void stergeProgramare(ArrayList<Programare> programs) throws MyException {
         Scanner scanner1 = new Scanner(System.in);
         Programare progSters = new Programare();
-        progSters = null;
-        while ( progSters == null)
+        System.out.println("Introduceti id-ul programarii de sters : ");
+        int id = scanner1.nextInt();
+        progSters = obtineProgById(programs, id);
+        if ( progSters != null)
         {
-            System.out.println("Introduceti id-ul programarii de sters : ");
-            int id = scanner1.nextInt();
-            progSters = obtineProgById(programs, id);
-            if (progSters == null)
-                System.out.println("Introduceti un id valid!");
+            programs.remove(progSters);
+            writeProgramari(programs);
+            scrieInAudit("EliminaMedic");
+            System.out.println("Lista actualizata a medicilor : ");
+            for ( Programare prog : programs )
+                System.out.println(prog.toString());
         }
-        programs.remove(progSters);
-        writeProgramari(programs);
-        scrieInAudit("StergereProgramare");
-        return programs;
+        else
+        {
+            throw new MyException ("Introduceti id valid!");
+        }
 
     }
+
+
+    public static void adaugaProgramare(ArrayList<Programare> programs)
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduceti data programarii (YYYY-MM-DD : ");
+        String data = scanner.nextLine();
+        System.out.println("Introduceti ora programarii (HH-MM) : ");
+        String ora  = scanner.nextLine();
+        System.out.println("Introduceti numele clientului : ");
+        String numeCl = scanner.nextLine();
+        System.out.println("Introduceti numele medicului : ");
+        String numeMed = scanner.nextLine();
+        System.out.println("Introduceti pretul : ");
+        int pret = scanner.nextInt();
+        int idMaxi = 0;
+        for ( Programare prog : programs )
+        {
+            if ( prog.getIdProgram() > idMaxi)
+                idMaxi = prog.getIdProgram();
+        }
+        Programare progNou = new Programare( idMaxi+1,data,ora,numeCl,numeMed,pret);
+        programs.add(progNou);
+        writeProgramari(programs);
+        scrieInAudit("AdaugareProgramare");
+        System.out.println("Lista acutalizata a programarilor :");
+        for ( Programare prog : programs )
+            System.out.println(prog.toString());
+    }
+
 
     public static Programare obtineProgById(ArrayList<Programare> programs, int idProg)
     {

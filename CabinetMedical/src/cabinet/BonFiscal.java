@@ -1,4 +1,5 @@
 package cabinet;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.time.LocalDate;
 
@@ -26,7 +27,7 @@ public class BonFiscal  {
         this.idBon = BonId;
         this.pret = pret;
         this.data = data;
-        id++;
+        ++id;
 
     }
 
@@ -39,6 +40,9 @@ public class BonFiscal  {
         this.pret = pret;
         this.data = data;
 
+    }
+
+    public static void stergeBon(ArrayList<BonFiscal> bonuri) {
     }
 
     public int getIdClient() {

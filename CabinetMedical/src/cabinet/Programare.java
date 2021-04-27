@@ -23,7 +23,7 @@ public class Programare {
         this.client = client;
         this.medic = medic;
         this.pret = pret;
-        id++;
+        ++id;
     }
 
     public Programare(String data, String ora, String client, String medic, int pret)

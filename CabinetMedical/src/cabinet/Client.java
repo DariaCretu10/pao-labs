@@ -23,7 +23,7 @@ public class Client {
         this.prenume = prenume;
         this.varsta = varsta;
         this.interventie = interventie;
-        id++;
+        ++id;
     }
 
     public Client(String nume, String prenume, int varsta, String interventie)
