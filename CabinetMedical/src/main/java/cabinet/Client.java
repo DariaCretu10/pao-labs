@@ -86,7 +86,7 @@ public class Client {
     @Override
     public String toString() {
         return "Clientul " + nume + " " + prenume + " cu varsta de " + varsta +
-                " ani are o programare pentru " + interventie;
+                " ani are o programare pentru " + interventie + " ;idClient :" + idClient;
     }
 
     @Override

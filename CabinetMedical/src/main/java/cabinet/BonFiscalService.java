@@ -1,11 +1,16 @@
 package cabinet;
 
+import javax.xml.crypto.Data;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import java.sql.PreparedStatement;
 
 public class BonFiscalService {
 
@@ -13,7 +18,7 @@ public class BonFiscalService {
 
     public static void scrieInAudit(String actiune) {
         try {
-            FileWriter writer1 = new FileWriter("src/cabinet/servAudit.csv", true);
+            FileWriter writer1 = new FileWriter("src/main/java/cabinet/servAudit.csv", true);
             LocalDateTime timp = LocalDateTime.now();
             DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             String timpFormatat = timp.format(format);
@@ -27,8 +32,8 @@ public class BonFiscalService {
         }
     }
 
-    public void readBonuri(ArrayList<BonFiscal> bonuri) throws IOException {
-        BufferedReader csvReader = new BufferedReader(new FileReader("src/cabinet/Bon.csv"));
+   /* public void readBonuri(ArrayList<BonFiscal> bonuri) throws IOException {
+        BufferedReader csvReader = new BufferedReader(new FileReader("src/main/java/cabinet/Bon.csv"));
         String row;
         while ((row = csvReader.readLine()) != null) {
             String[] data = row.split(",");
@@ -47,7 +52,7 @@ public class BonFiscalService {
 
     public static void writeBonuri(ArrayList<BonFiscal> bonuri) {
         try {
-            FileWriter csvWriter = new FileWriter("src/cabinet/Bon.csv");
+            FileWriter csvWriter = new FileWriter("src/main/java/cabinet/Bon.csv");
             for (BonFiscal bon : bonuri) {
                 String elem = bon.getIdClient() + "," + bon.getIdMedic() + "," + bon.getServiciu() + "," +
                         bon.getIdBon() + "," + bon.getPret() + "," + bon.getData();
@@ -61,10 +66,14 @@ public class BonFiscalService {
         }
         scrieInAudit("CitireDinFisierBonuri");
 
-    }
+    }*/
 
 
-    public static void afisareBonData(ArrayList<BonFiscal> bonuri) {
+    public static void afisareBonData() throws SQLException {
+        Database database = new Database();
+        Connection connection = database.Connection();
+        ArrayList<BonFiscal> bonuri = new ArrayList<>();
+        bonuri = database.getAllBonuri();
         System.out.println("Introduceti data dorita : ");
         Scanner scanner1 = new Scanner(System.in);
         String date = scanner1.nextLine();
@@ -75,8 +84,10 @@ public class BonFiscalService {
         }
     }
 
-    public static ArrayList<BonFiscal> adaugareBon(ArrayList<BonFiscal> bonuri)
-    {
+    public static void adaugareBon() throws SQLException {
+        Database database = new Database();
+        Connection connection = database.Connection();
+        ArrayList<BonFiscal> bonuri = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduceti id-ul clientului :");
         int idCl = scanner.nextInt();
@@ -89,28 +100,47 @@ public class BonFiscalService {
         System.out.println("Introduceti data bonului : ");
         String date = scanner.next();
         LocalDate data = LocalDate.parse(date);
-        int idBonMaxi = 0;
-        for (BonFiscal bon : bonuri )
-        {
-            if ( bon.getIdBon() > idBonMaxi )
-                idBonMaxi = bon.getIdBon();
+        String sql = "INSERT INTO bonfiscal (idClient, idMedic, serviciu, pret, data) VALUES (?, ?, ?, ?, ?)";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, idCl);
+        statement.setInt(2, idMed);
+        statement.setString(3, serviciu);
+        statement.setInt(4, pret);
+        statement.setDate(5, Date.valueOf(data));
+
+        int rowsInserted = statement.executeUpdate();
+        if (rowsInserted > 0) {
+            System.out.println("Un nou bon a fost inserat cu succes!");
         }
-        BonFiscal bonNou = new BonFiscal(idCl,idMed,serviciu,idBonMaxi+1, pret, data);
-        bonuri.add(bonNou);
-        writeBonuri(bonuri);
         scrieInAudit("adaugareBon");
-        return bonuri;
-    }
-
-    public static void afisareBon(ArrayList<BonFiscal> bonuri) {
-        System.out.println("Lista bonurilor curente este : ");
-        for (BonFiscal bon : bonuri) {
+        bonuri = database.getAllBonuri();
+        System.out.println("Lista actualizata a bonurilor :");
+        for ( BonFiscal bon : bonuri )
             System.out.println(bon.toString());
-        }
-        scrieInAudit("AfisareBonuri");
     }
 
-    public static void stergeBon(ArrayList<BonFiscal> bonuri) throws MyException {
+    public static void afisareBon() {
+        System.out.println("Lista bonurilor curente este : ");
+        ArrayList<BonFiscal> bonuri = new ArrayList<>();
+        Database database = new Database();
+        Connection connection = database.Connection();
+        try {
+            bonuri = database.getAllBonuri();
+            for (BonFiscal bon : bonuri) {
+                System.out.println(bon.toString());
+            }
+            scrieInAudit("AfisareBonuri");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void stergeBon() throws MyException, SQLException {
+        Database database = new Database();
+        Connection connection = database.Connection();
+        ArrayList<BonFiscal> bonuri = new ArrayList<>();
+        bonuri = database.getAllBonuri();
         Scanner scanner1 = new Scanner(System.in);
         BonFiscal bonSters = new BonFiscal();
         System.out.println("Introduceti id-ul bonului de sters : ");
@@ -118,9 +148,18 @@ public class BonFiscalService {
         bonSters = obtineBonById(bonuri, id);
         if ( bonSters != null)
         {
-            bonuri.remove(bonSters);
-            writeBonuri(bonuri);
+
             scrieInAudit("EliminaBonFiscal");
+            String sql = "DELETE FROM bonfiscal WHERE idBon=?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Bonul a fost sters cu succes!");
+            }
+            bonuri = database.getAllBonuri();
             System.out.println("Lista actualizata a bonurilor :");
             for ( BonFiscal bon : bonuri )
                 System.out.println(bon.toString());

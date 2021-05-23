@@ -4,16 +4,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.sql.PreparedStatement;
 import static cabinet.BonFiscalService.scrieInAudit;
 
 public class ClientService {
 
 
 
-    public void readClienti (ArrayList<Client> clienti) throws IOException {
-        BufferedReader csvReader = new BufferedReader(new FileReader("src/cabinet/Client.csv"));
+    /*public void readClienti (ArrayList<Client> clienti) throws IOException {
+        BufferedReader csvReader = new BufferedReader(new FileReader("src/main/java/cabinet/Client.csv"));
         String row;
         while ((row = csvReader.readLine()) != null) {
             String[] data = row.split(",");
@@ -35,7 +38,7 @@ public class ClientService {
 
     public static void writeClienti(ArrayList<Client> clienti)  {
         try {
-            FileWriter csvWriter = new FileWriter("src/cabinet/Client.csv");
+            FileWriter csvWriter = new FileWriter("src/main/java/cabinet/Client.csv");
             for (Client client : clienti) {
                 String elem = client.getIdClient() + "," + client.getNume() + "," + client.getPrenume() + "," +
                         client.getVarsta() + "," + client.getInterventie();
@@ -51,37 +54,39 @@ public class ClientService {
         }
         //scrieInAudit("scrieInFisierClienti");
 
-    }
+    }*/
 
-    public static void afisareClienti (ArrayList<Client> clienti)
+    public static void afisareClienti ()
     {
-        System.out.println("Lista clientilor este :");
-        for ( Client client : clienti)
-        {
-            System.out.println(client.toString());
-        }
-        scrieInAudit("AfisareClienti");
-    }
-
-    public static void intoarcePacient (ArrayList<Client> clienti)
-    {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduceti numele pacientului : ");
-        String nume = scanner.nextLine();
-        System.out.println("Introduceti prenumele pacientului : ");
-        String prenume = scanner.nextLine();
-        for ( Client client : clienti)
-        {
-            if ( client.getNume().equals(nume) && client.getPrenume().equals(prenume) )
+        System.out.println("Lista clientilor : ");
+        ArrayList<Client> clienti = new ArrayList<>();
+        Database database = new Database();
+        Connection connection = database.Connection();
+        try {
+            clienti = database.getAllClienti();
+            for (Client client : clienti) {
                 System.out.println(client.toString());
-                break;
+            }
+            scrieInAudit("AfisareClienti");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+    }
+
+    public static void editeazaPacient ()
+    {
+        Database database = new Database();
+        Connection connection = database.Connection();
+        ArrayList<Client> clienti = new ArrayList<>();
+        Scanner scanner3 = new Scanner(System.in);
 
     }
 
 
-    public static void adaugaClient(ArrayList<Client> clienti)
-    {
+    public static void adaugaClient() throws SQLException {
+        Database database = new Database();
+        Connection connection = database.Connection();
+        ArrayList<Client> clienti = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Introduceti numele clientului : ");
         String nume  = scanner.nextLine();
@@ -91,24 +96,30 @@ public class ClientService {
         int varsta = scanner.nextInt();
         System.out.println("Introduceti interventia clientului : ");
         String interventie = scanner.next();
-        int maxi = 0;
-        for (Client client : clienti )
-        {
-            if  ( client.getIdClient() > maxi )
-            {
-                maxi = client.getIdClient();
-            }
+        String sql = "INSERT INTO client (nume, prenume, varsta, interventie) VALUES (?, ?, ?, ?)";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, nume);
+        statement.setString(2, prenume);
+        statement.setInt(3, varsta);
+        statement.setString(4, interventie);
+
+        int rowsInserted = statement.executeUpdate();
+        if (rowsInserted > 0) {
+            System.out.println("Un nou client a fost inserat cu succes!");
         }
-        Client clientNou = new Client(maxi+1, nume, prenume, varsta, interventie);
-        clienti.add(clientNou);
-        writeClienti(clienti);
+        clienti = database.getAllClienti();
         scrieInAudit("adaugareClient");
         System.out.println("Lista acutalizata a clientilor :");
         for ( Client client : clienti )
             System.out.println(client.toString());
     }
 
-    public static void eliminaPacient(ArrayList<Client> clienti) throws MyException {
+    public static void eliminaPacient() throws MyException, SQLException {
+        Database database = new Database();
+        Connection connection = database.Connection();
+        ArrayList<Client> clienti = new ArrayList<>();
+        clienti = database.getAllClienti();
         Scanner scanner1 = new Scanner(System.in);
         Client clientSters = new Client();
         System.out.println("Introduceti id-ul clientului de sters : ");
@@ -116,9 +127,15 @@ public class ClientService {
         clientSters = obtineClientById(clienti, id);
         if ( clientSters != null)
         {
-            clienti.remove(clientSters);
-            writeClienti(clienti);
-            scrieInAudit("EliminaPacient");
+            String sql = "DELETE FROM client WHERE idClient=?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Clientul a fost sters cu succes!");
+            }
+            clienti = database.getAllClienti();
             System.out.println("Lista actualizata a clientilor :");
             for ( Client client : clienti )
                 System.out.println(client.toString());

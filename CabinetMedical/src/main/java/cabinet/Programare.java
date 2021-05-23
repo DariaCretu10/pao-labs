@@ -5,8 +5,8 @@ public class Programare {
     private int idProgram ;
     private String data;
     private String ora;
-    private String client;
-    private String medic;
+    private int idClient;
+    private int idMedic;
     private int pret;
     private static int id=0;
 
@@ -15,24 +15,24 @@ public class Programare {
 
     }
 
-    public Programare(int idProg,String data, String ora, String client, String medic, int pret)
+    public Programare(int idProg, String data, String ora, int client, int medic, int pret)
     {
         this.idProgram = idProg;
         this.data = data;
         this.ora = ora;
-        this.client = client;
-        this.medic = medic;
+        this.idClient = client;
+        this.idMedic = medic;
         this.pret = pret;
         ++id;
     }
 
-    public Programare(String data, String ora, String client, String medic, int pret)
+    public Programare(String data, String ora, int client, int medic, int pret)
     {
         this.idProgram = ++id;
         this.data = data;
         this.ora = ora;
-        this.client = client;
-        this.medic = medic;
+        this.idClient = client;
+        this.idMedic = medic;
         this.pret = pret;
     }
 
@@ -63,22 +63,18 @@ public class Programare {
         this.ora = ora;
     }
 
-    public String getClient()
-    {
-        return client;
+    public int getIdClient() {
+        return idClient;
     }
-    public void setClient(String client)
-    {
-        this.client = client;
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
     }
 
-    public String getMedic()
-    {
-        return medic;
+    public int getIdMedic() {
+        return idMedic;
     }
-    public void setMedic(String medic)
-    {
-        this.medic = medic;
+    public void setIdMedic(int idMedic) {
+        this.idMedic = idMedic;
     }
 
     public int getPret()
@@ -92,8 +88,8 @@ public class Programare {
 
     @Override
     public String toString() {
-        return "Clientul " + client + " are o programare in data de " + data +
-                " la ora " + ora + " cu doctorul " + medic;
+        return "Clientul cu id-ul " + idClient + " are o programare in data de " + data +
+                " la ora " + ora + " cu doctorul cu id-ul " + idMedic + ". Costul este de : " + pret + " ; idProgramare: " + getIdProgram();
     }
 
 }

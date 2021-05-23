@@ -98,7 +98,7 @@ public class Medic implements Comparable<Medic> {
     @Override
     public String toString() {
         return "Medicul " + nume + " " + prenume + " cu varsta de " +
-                varsta + " ani are o vechime de " + vechime + " ani si lucreaza in domeniul " + specialitate;
+                varsta + " ani are o vechime de " + vechime + " ani si lucreaza in domeniul " + specialitate + " ;idMedic " + idMedic;
     }
 
     @Override
