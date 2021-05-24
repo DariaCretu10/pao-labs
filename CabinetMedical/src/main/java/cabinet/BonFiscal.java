@@ -91,7 +91,7 @@ public class BonFiscal  {
 
     @Override
     public String toString(){
-        return "Acest bon cu id-ul " + id + " din data de " + data + " apartine clientului " + idClient +
+        return "Acest bon cu id-ul " + idBon + " din data de " + data + " apartine clientului " + idClient +
                 " care a avut o programare pentru " + serviciu + " la medicul " + idMedic +
                 " al carei cost a fost " + pret;
     }

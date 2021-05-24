@@ -170,6 +170,30 @@ public class BonFiscalService {
         }
     }
 
+    public static void editeazaPretSiData () throws SQLException {
+        Database database = new Database();
+        Connection connection = database.Connection();
+        Scanner scanner2 = new Scanner(System.in);
+        System.out.println("Introduceti id-ul bonului pe care doriti sa il editati : ");
+        int id = scanner2.nextInt();
+        System.out.println("Introduceti noua data : ");
+        String date = scanner2.next();
+        LocalDate data = LocalDate.parse(date);
+        System.out.println("Introduceti pretul dorit : ");
+        int pret = scanner2.nextInt();
+        String sql = "UPDATE bonfiscal SET pret=?, data=? WHERE idBon=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, pret);
+        statement.setDate(2, Date.valueOf(data));
+        statement.setInt(3,id);
+
+        int rowsUpdated = statement.executeUpdate();
+        if (rowsUpdated > 0) {
+            System.out.println("Bon Fiscal modificat cu succes!");
+        }
+
+
+    }
     public static BonFiscal obtineBonById(ArrayList<BonFiscal> bonuri, int idBon)
     {
         for (BonFiscal bon :bonuri)

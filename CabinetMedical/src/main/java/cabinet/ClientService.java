@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -73,12 +74,32 @@ public class ClientService {
         }
     }
 
-    public static void editeazaPacient ()
-    {
+    public static void editeazaPacient () throws SQLException {
         Database database = new Database();
         Connection connection = database.Connection();
         ArrayList<Client> clienti = new ArrayList<>();
         Scanner scanner3 = new Scanner(System.in);
+        System.out.println("Introduceti id-ul pacientului pe care doriti sa il editati :");
+        int id = scanner3.nextInt();
+        System.out.println("Introduceti noul nume : ");
+        String nume = scanner3.next();
+        System.out.println("Introduceti varsta :");
+        int varsta = scanner3.nextInt();
+        System.out.println("Introduceti interventia : ");
+        String interventie = scanner3.next();
+        String sql = "UPDATE client SET nume=?, varsta=?, interventie=? WHERE idClient=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, nume);
+        statement.setInt(2, varsta);
+        statement.setString(3,interventie);
+        statement.setInt(4, id);
+
+        int rowsUpdated = statement.executeUpdate();
+        if (rowsUpdated > 0) {
+            System.out.println("Datele clientului modificate cu succes!");
+        }
+        clienti = database.getAllClienti();
+        System.out.println(ClientService.obtineClientById(clienti,id).toString());
 
     }
 

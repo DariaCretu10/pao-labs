@@ -88,6 +88,7 @@ public class Main {
             System.out.println("2.Elimina client");
             System.out.println("3.Adauga client");
             System.out.println("4.Obtine informatii client dupa id");
+            System.out.println("5.Editare informatii pacient");
             Scanner scanner2 = new Scanner(System.in);
             int optClient = scanner2.nextInt();
             if ( optClient == 1)
@@ -123,6 +124,10 @@ public class Main {
                     System.out.println(client.toString());
                 }
             }
+            else if (optClient == 5)
+            {
+                ClientService.editeazaPacient();
+            }
         }
         else if (opt==3)
         {
@@ -131,6 +136,7 @@ public class Main {
             System.out.println("2.Sterge bon");
             System.out.println("3.Adauga bon");
             System.out.println("4.Intoarce bonurile dintr-o anume data");
+            System.out.println("5.Editeaza pretul si data unui bon");
             Scanner scanner3 = new Scanner(System.in);
             int optBon = scanner3.nextInt();
             if(optBon == 1)
@@ -156,6 +162,10 @@ public class Main {
             else if(optBon == 4)
             {
                 BonFiscalService.afisareBonData();
+            }
+            else if(optBon == 5)
+            {
+                BonFiscalService.editeazaPretSiData();
             }
         }
         else if (opt ==4 )
